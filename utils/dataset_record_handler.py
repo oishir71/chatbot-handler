@@ -32,7 +32,7 @@ class DatasetRecordHandler(BaseHandler):
     self.base_url = '%s/api/datarepository/datasets/%s' % (host_url, dataset_uuid)
     self.authorization = (id, password)
 
-  def get_records(self):
+  def get_records(self) -> list[dict]:
     '''
     datasetに紐付けされているdataset recordのレコード一覧を取得する
     '''
@@ -41,20 +41,20 @@ class DatasetRecordHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    records = response.json()
+    self.pprint_logger(object=records)
+    return records
 
-  def get_records_all(self):
-    '''
-    DatasetRecord内に存在する全てのレコードの一覧を取得
-    '''
-    response = requests.get(
-      '%s/records/all/' % (self.base_url),
-      auth=self.authorization
-    )
-    self.parse_response(response=response)
-    pprint.pprint(response.json())
+  def get_record_payloads(self) -> list[dict]:
+    records = self.get_records()
+    return records.get('result')
 
-  def get_record(self, record_uuid: str):
+  def get_record_information(self) -> dict:
+    records = self.get_records()
+    del records['result']
+    return records
+
+  def get_record(self, record_uuid: str) -> dict:
     '''
     record_uuidで指定されたレコードの詳細情報を取得
     '''
@@ -63,9 +63,11 @@ class DatasetRecordHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    record = response.json()
+    self.pprint_logger(object=record)
+    return record
 
-  def create_record(self, bodies: list[dict]):
+  def create_records(self, bodies: list[dict]) -> list[dict]:
     '''
     新規レコードの追加
     '''
@@ -77,9 +79,11 @@ class DatasetRecordHandler(BaseHandler):
       data=json.dumps(data)
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    records = response.json()
+    self.pprint_logger(object=records)
+    return records
 
-  def delete_record(self, record_uuid: str):
+  def delete_record(self, record_uuid: str) -> None:
     '''
     record_uuidで指定されたレコードの削除
     '''
@@ -89,26 +93,35 @@ class DatasetRecordHandler(BaseHandler):
     )
     self.parse_response(response=response)
 
+  def delete_record_by_question(self, question: str) -> None:
+    '''
+    質問を元にレコードを削除する
+    '''
+    records = self.get_record_payloads()
+    for record in records:
+      print(record)
+      if record.get('body').get('question') == question:
+        self.delete_record(record_uuid=record.get('id'))
+        logger.debug('Record Id: %s was deleted.' % (record.get('id')))
+
 if __name__ == '__main__':
   record_uuid='7025de47-6bae-48c8-b40a-48a19341df70'
 
   handler = DatasetRecordHandler()
+  handler.create_records(
+    bodies=[
+      {
+        'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
+        'for_train': True,
+        'question': '上戸彩の通信会社について',
+      },
+      {
+        'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
+        'for_train': True,
+        'question': 'ダンテカーバーの通信会社について',
+      },
+    ]
+  )
+  handler.delete_record_by_question(question='上戸彩の通信会社について')
+  handler.delete_record_by_question(question='ダンテカーバーの通信会社について')
   handler.get_records()
-  # handler.get_records_all()
-  # handler.get_record(record_uuid=record_uuid)
-  # handler.create_record(
-  #   bodies=[
-  #     {
-  #       'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
-  #       'for_train': True,
-  #       'question': '上戸彩の通信会社について',
-  #     },
-  #     {
-  #       'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
-  #       'for_train': True,
-  #       'question': 'ダンテカーバーの通信会社について',
-  #     },
-  #   ]
-  # )
-  # handler.delete_record(record_uuid='bea1a4d2-3f13-47f3-86b5-2ed65e24f244')
-  # handler.get_records()
