@@ -21,11 +21,11 @@ class DialogAnalyzerHandler(BaseHandler):
   MLAPI基盤に搭載されているDialogAnalyzer v2.0を操作するためのクラス。
   '''
   def __init__(
-      self,
-      host_url='http://localhost:8000',
-      id='admin',
-      password='password',
-      project_id='631a6a99-0b30-425a-bdf2-af4532ff9451'
+    self,
+    host_url='http://localhost:8000',
+    id='admin',
+    password='password',
+    project_id='631a6a99-0b30-425a-bdf2-af4532ff9451'
   ):
     super().__init__(host_url=host_url, id=id, password=password, project_id=project_id)
     self.base_url = '%s/api/projects/%s/mlapi/dialog-analyzer-v2' % (host_url, project_id)
