@@ -1,4 +1,5 @@
 import os
+import pprint
 
 # Logging
 import logging
@@ -27,7 +28,12 @@ class BaseHandler:
     self.project_id = project_id
 
   def parse_response(self, response):
-    if response.status_code == 200 or response.status_code == 201:
+    if response.status_code in [200, 201, 204]:
       logger.info('正常終了')
     else:
       logger.error('ステータス: %s - %s' % (response.status_code, response.text))
+
+  @staticmethod
+  def pprint_logger(object):
+    for line in pprint.pformat(object, width=150).split('\n'):
+      logger.info(line)

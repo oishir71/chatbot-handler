@@ -31,7 +31,7 @@ class DialogAnalyzerHandler(BaseHandler):
     self.base_url = '%s/api/projects/%s/mlapi/dialog-analyzer-v2' % (host_url, project_id)
     self.authorization = (id, password)
 
-  def get_instance_statuses(self):
+  def get_instances(self) -> list[dict]:
     '''
     インスタンスの一覧を取得する.
     '''
@@ -40,9 +40,11 @@ class DialogAnalyzerHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    instances = response.json().get('instances')
+    logger.debug('Number of instances: %d' % (len(instances)))
+    return instances
 
-  def get_instance_detail(self, instance_id: str):
+  def get_instance(self, instance_id: str) -> dict:
     '''
     instance_idで指定したインスタンスの詳細を取得する
     '''
@@ -51,9 +53,20 @@ class DialogAnalyzerHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    instance = response.json()
+    self.pprint_logger(object=instance)
+    return instance
 
-  def deploy_instance(self, instance_id: str):
+  def get_instance_by_name(self, name: str):
+    instances = self.get_instances()
+    for instance in instances:
+      if instance.get('name') == name:
+        return instance
+    else:
+      logger.error('No such instance was detected: "%s"' % (name))
+    return None
+
+  def deploy_instance(self, instance_id: str) -> dict:
     '''
     instance_idで指定したインスタンスを起動する
     '''
@@ -62,9 +75,11 @@ class DialogAnalyzerHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    information = response.json()
+    self.pprint_logger(object=information)
+    return information
 
-  def undeploy_instance(self, instance_id: str):
+  def undeploy_instance(self, instance_id: str) -> dict:
     '''
     instance_idで指定したインスタンスを停止する
     '''
@@ -73,7 +88,9 @@ class DialogAnalyzerHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    information = response.json()
+    self.pprint_logger(object=information)
+    return information
 
   def create_instance(self, name: str, datagroups: list[str]):
     '''
@@ -115,11 +132,13 @@ class DialogAnalyzerHandler(BaseHandler):
     pprint.pprint(response.json())
 
 if __name__ == '__main__':
-  instance_id = 'adl3olbsympkeni8'
+  instance_id = '0qwknp4jrnu2yt3b'
 
   handler = DialogAnalyzerHandler()
-  handler.get_instance_statuses()
+  print(handler.get_instances())
+  # print(handler.get_instance(instance_id=instance_id))
+  # print(handler.get_instance_by_name(name='sample-local-oishir71'))
   # handler.get_instance_detail(instance_id=instance_id)
-  # handler.deploy_instance(instance_id='adl3olbsympkeni8')
+  handler.deploy_instance(instance_id=instance_id)
   # handler.infer(instance_id=instance_id, text='test')
-  # handler.undeploy_instance(instance_id=instance_id)
+  handler.undeploy_instance(instance_id=instance_id)
