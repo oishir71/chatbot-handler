@@ -91,6 +91,20 @@ class Datasethandler(BaseHandler):
     )
     self.parse_response(response=response)
 
+  def export_dataset(self, dataset_uuid: str):
+    '''
+    datasetに紐づくdataset recordに関する情報を出力する
+    '''
+    data = {'format': 'csv'}
+    response = requests.post(
+      '%s/%s/export/' % (self.base_url, dataset_uuid),
+      headers={'Content-Type': 'application/json'},
+      auth=self.authorization,
+      data=json.dumps(data)
+    )
+    self.parse_response(response=response)
+    pprint.pprint(response.content)
+
 if __name__ == '__main__':
   handler = Datasethandler()
   handler.get_datasets()
@@ -98,3 +112,4 @@ if __name__ == '__main__':
   # handler.search_dataset(name='roishi-sample', datatype_name='chatbot-train')
   # handler.create_dataset(name="roishi-sample-temp", datatype_uuid='494c8b2f-44da-4e0d-8b45-088d51892b32')
   # handler.delete_dataset(dataset_uuid='2dd162db-805c-41ec-b5b9-75e96a1e1576')
+  handler.export_dataset(dataset_uuid='7c02c4b9-2147-4282-b7a9-db09ca934465')
