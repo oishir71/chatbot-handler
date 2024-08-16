@@ -27,13 +27,7 @@ class BaseHandler:
     self.project_id = project_id
 
   def parse_response(self, response):
-    if response.status_code == 200:
-      logger.info('Successful termination.')
-    elif response.status_code == 400:
-      logger.error('Incorrect format request.')
-    elif response.status_code == 403:
-      logger.error('CSRF not set or invalid.')
-    elif response.status_code == 404:
-      logger.error('The specified object cannnot be found.')
+    if response.status_code == 200 or response.status_code == 201:
+      logger.info('正常終了')
     else:
-      logger.error('Status code: %s - Text: %s' % (response.status_code, response.text))
+      logger.error('ステータス: %s - %s' % (response.status_code, response.text))
