@@ -2,6 +2,7 @@ import os
 import requests
 import pprint
 import json
+from typing import Union
 
 # Logging
 import logging
@@ -31,7 +32,7 @@ class DatasetGroupHandler(BaseHandler):
     self.base_url = '%s/api/chatbot/v1.0/projects/%s/datasetgroups' % (host_url, project_id)
     self.authorization = (id, password)
 
-  def get_datasetgroup_details(self):
+  def get_datasetgroups(self) -> list[dict]:
     '''
     プロジェクト配下のデータセットグループを取得する
     '''
@@ -40,20 +41,36 @@ class DatasetGroupHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    datasetgroups = response.json()
+    self.pprint_logger(object=datasetgroups)
+    return datasetgroups
 
-  def get_datasetgroup_detail(self, datasetgroup_uuid: str):
+  def get_datasetgroup(self, datasetgroup_uuid: str) -> dict:
     '''
-    特定のデータセットグループの詳細を取得する
+    特定のデータセットグループを取得する
     '''
     response = requests.get(
       '%s/%s/' % (self.base_url, datasetgroup_uuid),
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    datasetgroup = response.json()
+    self.pprint_logger(object=datasetgroup)
+    return datasetgroup
 
-  def create_datasetgroup(self, name: str):
+  def get_datasetgroup_by_name(self, name: str) -> Union[dict, None]:
+    '''
+    特定の名前のデータセットグループを取得する
+    '''
+    datasetgroups = self.get_datasetgroups()
+    for datasetgroup in datasetgroups:
+      if datasetgroup.get('name') == name:
+        return datasetgroup
+    else:
+      logger.error('No such datagroup was detected: "%s"' % (name))
+    return None
+
+  def create_datasetgroup(self, name: str) -> dict:
     '''
     nameで指定した名前のデータグループを新規に作成する
     '''
@@ -65,9 +82,11 @@ class DatasetGroupHandler(BaseHandler):
       data=json.dumps(data)
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    datagroup = response.json()
+    self.pprint_logger(object=datagroup)
+    return datagroup
 
-  def delete_datasetgroup(self, datasetgroup_uuid: str):
+  def delete_datasetgroup(self, datasetgroup_uuid: str) -> None:
     '''
     UUIDに対応するデータグループを削除する
     '''
@@ -76,9 +95,13 @@ class DatasetGroupHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
 
-  def get_answers(self, datasetgroup_uuid: str):
+  def delete_datagroup_by_name(self, name: str) -> None:
+    datagroup = self.get_datasetgroup_by_name(name=name)
+    if not datagroup is None:
+      self.delete_datasetgroup(datasetgroup_uuid=datagroup.get('id'))
+
+  def get_answers(self, datasetgroup_uuid: str) -> list[dict]:
     '''
     UUIDに対応するデータグループが持つ解答データを取得する
     '''
@@ -87,12 +110,14 @@ class DatasetGroupHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    answers = response.json()
+    self.pprint_logger(object=answers)
+    return answers
 
 if __name__ == '__main__':
   datasetgroup_uuid = '70518ce1-5c19-46a9-8922-7c02c2462273'
 
   handler = DatasetGroupHandler()
-  handler.get_datasetgroup_details()
-  handler.get_datasetgroup_detail(datasetgroup_uuid=datasetgroup_uuid)
-  handler.get_answers(datasetgroup_uuid=datasetgroup_uuid)
+  # handler.get_datasetgroup_details()
+  # handler.get_datasetgroup_detail(datasetgroup_uuid=datasetgroup_uuid)
+  # handler.get_answers(datasetgroup_uuid=datasetgroup_uuid)
