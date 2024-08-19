@@ -135,9 +135,9 @@ if __name__ == '__main__':
   instance_id = '0qwknp4jrnu2yt3b'
 
   handler = DialogAnalyzerHandler()
-  # print(handler.get_instance(instance_id=instance_id))
+  handler.get_instance(instance_id=instance_id)
   # print(handler.get_instance_by_name(name='sample-local-oishir71'))
   # handler.get_instance_detail(instance_id=instance_id)
-  handler.deploy_instance(instance_id=instance_id)
+  # handler.deploy_instance(instance_id=instance_id)
   # handler.infer(instance_id=instance_id, text='test')
-  handler.undeploy_instance(instance_id=instance_id)
+  # handler.undeploy_instance(instance_id=instance_id)

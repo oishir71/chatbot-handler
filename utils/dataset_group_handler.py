@@ -118,6 +118,6 @@ if __name__ == '__main__':
   datasetgroup_uuid = '70518ce1-5c19-46a9-8922-7c02c2462273'
 
   handler = DatasetGroupHandler()
-  # handler.get_datasetgroup_details()
+  handler.get_datasetgroups()
   # handler.get_datasetgroup_detail(datasetgroup_uuid=datasetgroup_uuid)
   # handler.get_answers(datasetgroup_uuid=datasetgroup_uuid)

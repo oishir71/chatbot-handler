@@ -56,7 +56,16 @@ class DataTypeHandler(BaseHandler):
     self.pprint_logger(object=datatype)
     return datatype
 
+  def get_datatype_by_name(self, name: str):
+    datatypes = self.get_datatypes()
+    for datatype in datatypes:
+      if datatype.get('name') == name:
+        return datatype
+    else:
+      logger.error('No such datatype was detected: %s' % (name))
+    return None
+
 if __name__ == '__main__':
   handler = DataTypeHandler()
-  handler.get_datatypes()
+  # handler.get_datatypes()
   handler.get_datatype(datatype_uuid='494c8b2f-44da-4e0d-8b45-088d51892b32')

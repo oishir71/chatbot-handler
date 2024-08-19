@@ -31,8 +31,11 @@ class CalculateAccuracyHandler(BaseHandler):
     self.base_url = '%s/api/chatbot/v1.0/projects/%s/calculate-accuracy' % (host_url, project_id)
     self.authorization = (id, password)
 
-  def get_accuracy(self, datagroupds: list[str]):
-    data={'datasetgroups': datagroupds}
+  def get_accuracy(self, datagroups: list[str]):
+    '''
+    datgroupsに対し正答率を算出する
+    '''
+    data={'datasetgroups': datagroups}
     response = requests.post(
       self.base_url,
       headers={'Content-Type': 'application/json'},
@@ -44,4 +47,4 @@ class CalculateAccuracyHandler(BaseHandler):
 
 if __name__ == '__main__':
   handler = CalculateAccuracyHandler()
-  handler.get_accuracy(datagroupds=['70518ce1-5c19-46a9-8922-7c02c2462273'])
+  handler.get_accuracy(datagroups=['70518ce1-5c19-46a9-8922-7c02c2462273'])
