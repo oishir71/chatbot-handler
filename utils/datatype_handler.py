@@ -39,7 +39,9 @@ class DataTypeHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    datatypes = response.json()
+    self.pprint_logger(object=datatypes)
+    return datatypes
 
   def get_datatype(self, datatype_uuid: str):
     '''
@@ -50,7 +52,9 @@ class DataTypeHandler(BaseHandler):
       auth=self.authorization
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    datatype = response.json()
+    self.pprint_logger(object=datatype)
+    return datatype
 
 if __name__ == '__main__':
   handler = DataTypeHandler()

@@ -135,7 +135,6 @@ if __name__ == '__main__':
   instance_id = '0qwknp4jrnu2yt3b'
 
   handler = DialogAnalyzerHandler()
-  print(handler.get_instances())
   # print(handler.get_instance(instance_id=instance_id))
   # print(handler.get_instance_by_name(name='sample-local-oishir71'))
   # handler.get_instance_detail(instance_id=instance_id)
