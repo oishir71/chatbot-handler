@@ -29,6 +29,7 @@ class ChatbotHandler:
 
     self.dialog_analyzer_handler = None
     self.dataset_group_handler = None
+    self.dataset_handler = None
     self.answer_dataset_record_handler = None
     self.train_dataset_record_handler = None
 
@@ -52,6 +53,15 @@ class ChatbotHandler:
     self.answer_dataset_uuid = datagroup.get('answer')
     self.train_dataset_uuid = datagroup.get('train')
     return datagroup
+
+  # Dataset
+  def setup_dataset_handler(self):
+    self.dataset_handler = Datasethandler(
+      host_url=self.host_url,
+      id=self.id,
+      password=self.password,
+      project_id=self.project_id
+    )
 
   # Dataset record
   def setup_answer_train_dataset_record_handler(self):
@@ -122,6 +132,17 @@ class ChatbotHandler:
         self.train_dataset_uuid,
       ))
 
+  # Clean-up
+  def cleanup_every_objects(self):
+    self.dataset_handler.delete_dataset(dataset_uuid=self.answer_dataset_uuid)
+    self.dataset_handler.delete_dataset(dataset_uuid=self.train_dataset_uuid)
+    self.dataset_group_handler.delete_datasetgroup(datasetgroup_uuid=self.dataset_group_uuid)
+    self.dialog_analyzer_handler.delete_instance(instance_id=self.dialog_analyzer_uuid)
+
+    self.dialog_analyzer_uuid = 'setme'
+    self.dataset_group_uuid = 'setme'
+    self.answer_dataset_uuid = 'setme'
+    self.train_dataset_uuid = 'setme'
 
 if __name__ == '__main__':
   obj = ChatbotHandler()
@@ -152,3 +173,5 @@ if __name__ == '__main__':
   )
   obj.setup_dialog_analyzer_handler()
   obj.create_dialog_analyzer_instance(name='hogehoge-da-2')
+  obj.dump_chatbot_information()
+  obj.cleanup_every_objects()
