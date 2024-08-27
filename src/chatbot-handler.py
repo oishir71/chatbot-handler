@@ -1,6 +1,7 @@
 import os
 import sys
 import pprint
+import datetime
 
 # Logging
 import logging
@@ -25,36 +26,129 @@ class ChatbotHandler:
     self.id = 'admin'
     self.password = 'password'
     self.project_id = '631a6a99-0b30-425a-bdf2-af4532ff9451'
-    self.dataset_uuid = '7c02c4b9-2147-4282-b7a9-db09ca934465'
 
     self.dialog_analyzer_handler = None
     self.dataset_group_handler = None
-    self.dataset_handler = None
-    self.dataset_record_handler = None
+    self.answer_dataset_record_handler = None
+    self.train_dataset_record_handler = None
 
-  def get_datasetgroup_from_dialog_analyzer(self):
-    '''
-    TODO: dataset groupのidを取得する方法を見つける必要あり
-    dialog analyzerから対応するdataset groupのidを取得する
-    '''
-    self.dialog_analyzer_handler()
+    self.dialog_analyzer_uuid = 'setme'
+    self.dataset_group_uuid = 'setme'
+    self.answer_dataset_uuid = 'setme'
+    self.train_dataset_uuid = 'setme'
 
-  def get_dataset_ids_from_chatbot_datasetgroup(self, datasetgroup_uuid: str):
-    '''
-    dataset groupから対応するdatasetのidを取得する
-    '''
-    datasetgroup = self.dataset_group_handler.get_datasetgroup(datasetgroup_uuid=datasetgroup_uuid)
-    return {name: datasetgroup.get(name) for name in ['answer', 'train', 'log']}
+  # Dataset group
+  def setup_dataset_group_handler(self):
+    self.dataset_group_handler = DatasetGroupHandler(
+      host_url=self.host_url,
+      id=self.id,
+      password=self.password,
+      project_id=self.project_id
+    )
 
-  def add_training_data_to_dataset(self, bodies: list):
-    '''
-    training用のdatasetにdataを追加する
-    '''
-    self.dataset_record_handler.create_records(bodies=bodies)
+  def create_dataset_group(self, name: str):
+    datagroup = self.dataset_group_handler.create_datasetgroup(name=name)
+    self.dataset_group_uuid = datagroup.get('id')
+    self.answer_dataset_uuid = datagroup.get('answer')
+    self.train_dataset_uuid = datagroup.get('train')
+    return datagroup
 
-  def train_chatbot(self):
-    '''
-    TODO: chatbotを再度トレーニングする方法を探す必要あり
-    chatbotを再度trainingする
-    '''
-    pass
+  # Dataset record
+  def setup_answer_train_dataset_record_handler(self):
+    self.answer_dataset_record_handler = DatasetRecordHandler(
+      host_url=self.host_url,
+      id=self.id,
+      password=self.password,
+      project_id=self.project_id,
+      dataset_uuid=self.answer_dataset_uuid,
+    )
+
+    self.train_dataset_record_handler = DatasetRecordHandler(
+      host_url=self.host_url,
+      id=self.id,
+      password=self.password,
+      project_id=self.project_id,
+      dataset_uuid=self.train_dataset_uuid,
+    )
+
+  def add_record_into_answer_dataset(self, bodies: list[dict]):
+    self.answer_dataset_record_handler.create_records(bodies=bodies)
+
+  def delete_record_from_answer_dataset(self, record_uuid: str):
+    self.answer_dataset_record_handler.delete_record(record_uuid=record_uuid)
+
+  def delete_records_from_answer_dataset(self, record_uuids: list[str]):
+    for record_uuid in record_uuids:
+      self.delete_record_from_answer_dataset(record_uuid=record_uuid)
+
+  def add_record_into_train_dataset(self, bodies: list[dict]):
+    self.train_dataset_record_handler.create_records(bodies=bodies)
+
+  def delete_record_from_train_dataset(self, record_uuid: str):
+    self.train_dataset_record_handler.delete_record(record_uuid=record_uuid)
+
+  def delete_records_from_train_dataset(self, record_uuids: list[str]):
+    for record_uuid in record_uuids:
+      self.delete_record_from_train_dataset(record_uuid=record_uuid)
+
+  # Dialog analyzer
+  def setup_dialog_analyzer_handler(self):
+    self.dialog_analyzer_handler = DialogAnalyzerHandler(
+      host_url=self.host_url,
+      id=self.id,
+      password=self.password,
+      project_id=self.project_id,
+    )
+
+  def create_dialog_analyzer_instance(self, name: str):
+    self.dialog_analyzer_handler.create_instance(name=name, datagroups=[self.dataset_group_uuid])
+
+  def deploy_dialog_analyzer_instance(self):
+    self.dialog_analyzer_handler.deploy_instance(instance_id=self.dialog_analyzer_uuid)
+
+  def undeploy_dialog_analyzer_instance(self):
+    self.dialog_analyzer_handler.undeploy_instance(instance_id=self.dialog_analyzer_uuid)
+
+  def infer(self, text: str):
+    self.dialog_analyzer_handler.infer(instance_id=self.dialog_analyzer_uuid, text=text)
+
+  # Dump
+  def dump_chatbot_information(self, filename: str='../histories/datagroup.csv'):
+    with open(filename, mode='a') as f:
+      f.weite('%s,%s,%s,%s' % (
+        self.project_id,
+        self.dataset_group_uuid,
+        self.answer_dataset_uuid,
+        self.train_dataset_uuid,
+      ))
+
+
+if __name__ == '__main__':
+  obj = ChatbotHandler()
+  obj.setup_dataset_group_handler()
+  obj.create_dataset_group(name='hogehoge-2')
+  obj.setup_answer_train_dataset_record_handler()
+  obj.add_record_into_answer_dataset(
+    bodies=[
+      {
+        'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
+        'for_train': True,
+        'question': '上戸彩の通信会社について',
+      },
+      {
+        'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
+        'for_train': True,
+        'question': 'ダンテカーバーの通信会社について',
+      },
+    ]
+  )
+  obj.add_record_into_train_dataset(
+    bodies=[
+      {
+        'title': '【衛星干渉事前計算】各種マスタ設定担当者の変更について',
+        'context': '各種マスタ設定担当者の変更については、下記FAQをご参照の上、ご対応ください。\n▶<a href="https://open-ui.biz/cms/ou/faq/sat-intrf-precalculation/27192/">衛星干渉事前計算_各種マスタ設定担当者の変更について</a>',
+      },
+    ]
+  )
+  obj.setup_dialog_analyzer_handler()
+  obj.create_dialog_analyzer_instance(name='hogehoge-da-2')

@@ -14,7 +14,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
-from base_handler import BaseHandler
+from .base_handler import BaseHandler
 
 class DialogAnalyzerHandler(BaseHandler):
   '''
@@ -136,8 +136,7 @@ if __name__ == '__main__':
 
   handler = DialogAnalyzerHandler()
   handler.get_instance(instance_id=instance_id)
-  # print(handler.get_instance_by_name(name='sample-local-oishir71'))
-  # handler.get_instance_detail(instance_id=instance_id)
-  # handler.deploy_instance(instance_id=instance_id)
-  # handler.infer(instance_id=instance_id, text='test')
-  # handler.undeploy_instance(instance_id=instance_id)
+  handler.get_instance_detail(instance_id=instance_id)
+  handler.deploy_instance(instance_id=instance_id)
+  handler.infer(instance_id=instance_id, text='test')
+  handler.undeploy_instance(instance_id=instance_id)

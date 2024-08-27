@@ -15,7 +15,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
-from base_handler import BaseHandler
+from .base_handler import BaseHandler
 
 class DatasetGroupHandler(BaseHandler):
   '''
@@ -119,5 +119,6 @@ if __name__ == '__main__':
 
   handler = DatasetGroupHandler()
   handler.get_datasetgroups()
-  # handler.get_datasetgroup_detail(datasetgroup_uuid=datasetgroup_uuid)
-  # handler.get_answers(datasetgroup_uuid=datasetgroup_uuid)
+  handler.get_datasetgroup(datasetgroup_uuid=datasetgroup_uuid)
+  datagroup = handler.create_datasetgroup(name='aho-no-1')
+  handler.get_answers(datasetgroup_uuid=datasetgroup_uuid)

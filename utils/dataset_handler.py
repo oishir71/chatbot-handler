@@ -1,6 +1,5 @@
 import os
 import requests
-import pprint
 import json
 
 # Logging
@@ -14,7 +13,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
-from base_handler import BaseHandler
+from .base_handler import BaseHandler
 
 class Datasethandler(BaseHandler):
   '''
@@ -134,10 +133,11 @@ class Datasethandler(BaseHandler):
 
 if __name__ == '__main__':
   handler = Datasethandler()
-  # handler.get_datasets()
+  handler.get_datasets()
   handler.get_dataset(dataset_uuid='7c02c4b9-2147-4282-b7a9-db09ca934465')
-  # handler.search_dataset(name='roishi-sample', datatype_name='chatbot-train')
-  # handler.create_dataset(name="roishi-sample-temp", datatype_uuid='494c8b2f-44da-4e0d-8b45-088d51892b32')
-  # handler.delete_dataset_by_name(name='roishi-sample-temp')
-  # handler.export_dataset(dataset_uuid='7c02c4b9-2147-4282-b7a9-db09ca934465')
-  # handler.export_dataset_by_name(name='roishi-sample-temp')
+  handler.get_dataset(dataset_uuid='7f4a8e26-3886-4e20-b898-3b2368b3e3c0')
+  handler.search_dataset(name='roishi-sample', datatype_name='chatbot-train')
+  handler.create_dataset(name="roishi-sample-temp", datatype_uuid='494c8b2f-44da-4e0d-8b45-088d51892b32')
+  handler.delete_dataset_by_name(name='roishi-sample-temp')
+  handler.export_dataset(dataset_uuid='7c02c4b9-2147-4282-b7a9-db09ca934465')
+  handler.export_dataset_by_name(name='roishi-sample-temp')

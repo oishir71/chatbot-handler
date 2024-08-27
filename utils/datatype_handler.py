@@ -1,7 +1,5 @@
 import os
 import requests
-import pprint
-import json
 
 # Logging
 import logging
@@ -14,7 +12,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
-from base_handler import BaseHandler
+from .base_handler import BaseHandler
 
 class DataTypeHandler(BaseHandler):
   '''
@@ -67,5 +65,6 @@ class DataTypeHandler(BaseHandler):
 
 if __name__ == '__main__':
   handler = DataTypeHandler()
-  # handler.get_datatypes()
-  handler.get_datatype(datatype_uuid='494c8b2f-44da-4e0d-8b45-088d51892b32')
+  handler.get_datatypes()
+  handler.get_datatype(datatype_uuid='494c8b2f-44da-4e0d-8b45-088d51892b32') # chatbot-train
+  handler.get_datatype(datatype_uuid='258fe363-3fdc-442a-8642-93ba49e3b08d') # chatbot-answer
