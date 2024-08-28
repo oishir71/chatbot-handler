@@ -1,7 +1,5 @@
 import os
 import sys
-import pprint
-import datetime
 
 # Logging
 import logging
@@ -152,6 +150,14 @@ if __name__ == '__main__':
   obj.add_record_into_answer_dataset(
     bodies=[
       {
+        'title': '【衛星干渉事前計算】各種マスタ設定担当者の変更について',
+        'context': '各種マスタ設定担当者の変更については、下記FAQをご参照の上、ご対応ください。\n▶<a href="https://open-ui.biz/cms/ou/faq/sat-intrf-precalculation/27192/">衛星干渉事前計算_各種マスタ設定担当者の変更について</a>',
+      },
+    ]
+  )
+  obj.add_record_into_train_dataset(
+    bodies=[
+      {
         'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
         'for_train': True,
         'question': '上戸彩の通信会社について',
@@ -160,14 +166,6 @@ if __name__ == '__main__':
         'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
         'for_train': True,
         'question': 'ダンテカーバーの通信会社について',
-      },
-    ]
-  )
-  obj.add_record_into_train_dataset(
-    bodies=[
-      {
-        'title': '【衛星干渉事前計算】各種マスタ設定担当者の変更について',
-        'context': '各種マスタ設定担当者の変更については、下記FAQをご参照の上、ご対応ください。\n▶<a href="https://open-ui.biz/cms/ou/faq/sat-intrf-precalculation/27192/">衛星干渉事前計算_各種マスタ設定担当者の変更について</a>',
       },
     ]
   )

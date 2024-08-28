@@ -13,7 +13,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
-from .base_handler import BaseHandler
+from base_handler import BaseHandler
 
 class Datasethandler(BaseHandler):
   '''

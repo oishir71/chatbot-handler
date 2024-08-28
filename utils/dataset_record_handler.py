@@ -13,7 +13,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
-from .base_handler import BaseHandler
+from base_handler import BaseHandler
 
 class DatasetRecordHandler(BaseHandler):
   '''
@@ -104,36 +104,37 @@ class DatasetRecordHandler(BaseHandler):
 
 if __name__ == '__main__':
   # For training
-  record_uuid='cfd169c9-8712-470c-979e-6d1450e02e16'
+  dataset_uuid='cfd169c9-8712-470c-979e-6d1450e02e16'
 
-  handler = DatasetRecordHandler(dataset_uuid=record_uuid)
-  handler.create_records(
-    bodies=[
-      {
-        'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
-        'for_train': True,
-        'question': '上戸彩の通信会社について',
-      },
-      {
-        'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
-        'for_train': True,
-        'question': 'ダンテカーバーの通信会社について',
-      },
-    ]
-  )
-  handler.delete_record_by_question(question='上戸彩の通信会社について')
-  handler.delete_record_by_question(question='ダンテカーバーの通信会社について')
+  handler = DatasetRecordHandler(dataset_uuid=dataset_uuid)
   handler.get_records()
+  # handler.create_records(
+  #   bodies=[
+  #     {
+  #       'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
+  #       'for_train': True,
+  #       'question': '上戸彩の通信会社について',
+  #     },
+  #     {
+  #       'correct_answer': '6279c718-a990-4d8f-9dd4-b494d5d2d31e',
+  #       'for_train': True,
+  #       'question': 'ダンテカーバーの通信会社について',
+  #     },
+  #   ]
+  # )
+  # handler.delete_record_by_question(question='上戸彩の通信会社について')
+  # handler.delete_record_by_question(question='ダンテカーバーの通信会社について')
+  # handler.get_records()
 
-  # For answer
-  record_uuid='924974c0-c6f8-4958-ac0e-1d6a3279b74c'
-  handler = DatasetRecordHandler(dataset_uuid=record_uuid)
-  handler.create_records(
-    bodies=[
-      {
-        'title': '【衛星干渉事前計算】各種マスタ設定担当者の変更について',
-        'context': '各種マスタ設定担当者の変更については、下記FAQをご参照の上、ご対応ください。\n▶<a href="https://open-ui.biz/cms/ou/faq/sat-intrf-precalculation/27192/">衛星干渉事前計算_各種マスタ設定担当者の変更について</a>',
-      },
-    ]
-  )
+  # # For answer
+  dataset_uuid='924974c0-c6f8-4958-ac0e-1d6a3279b74c'
+  handler = DatasetRecordHandler(dataset_uuid=dataset_uuid)
+  # handler.create_records(
+  #   bodies=[
+  #     {
+  #       'title': '【衛星干渉事前計算】各種マスタ設定担当者の変更について',
+  #       'context': '各種マスタ設定担当者の変更については、下記FAQをご参照の上、ご対応ください。\n▶<a href="https://open-ui.biz/cms/ou/faq/sat-intrf-precalculation/27192/">衛星干渉事前計算_各種マスタ設定担当者の変更について</a>',
+  #     },
+  #   ]
+  # )
   handler.get_records()
