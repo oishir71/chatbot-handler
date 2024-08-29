@@ -1,7 +1,9 @@
 import os
+import sys
 import requests
 import pprint
 import json
+import time
 
 # Logging
 import logging
@@ -14,7 +16,8 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
-from .base_handler import BaseHandler
+sys.path.append(os.path.dirname(__file__))
+from base_handler import BaseHandler
 
 class DialogAnalyzerHandler(BaseHandler):
   '''
@@ -54,10 +57,9 @@ class DialogAnalyzerHandler(BaseHandler):
     )
     self.parse_response(response=response)
     instance = response.json()
-    self.pprint_logger(object=instance)
     return instance
 
-  def get_instance_by_name(self, name: str):
+  def get_instance_by_name(self, name: str) -> dict:
     instances = self.get_instances()
     for instance in instances:
       if instance.get('name') == name:
@@ -76,7 +78,6 @@ class DialogAnalyzerHandler(BaseHandler):
     )
     self.parse_response(response=response)
     information = response.json()
-    self.pprint_logger(object=information)
     return information
 
   def undeploy_instance(self, instance_id: str) -> dict:
@@ -89,10 +90,9 @@ class DialogAnalyzerHandler(BaseHandler):
     )
     self.parse_response(response=response)
     information = response.json()
-    self.pprint_logger(object=information)
     return information
 
-  def create_instance(self, name: str, datagroups: list[str]):
+  def create_instance(self, name: str, datagroups: list[str]) -> dict:
     '''
     nameで指定した名前のインスタンスを新規に作成する
     '''
@@ -104,9 +104,10 @@ class DialogAnalyzerHandler(BaseHandler):
       data = json.dumps(data),
     ),
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    information = response.json()
+    return information
 
-  def delete_instance(self, instance_id: str):
+  def delete_instance(self, instance_id: str) -> None:
     '''
     instance_idで指定したインスタンスを削除する
     '''
@@ -115,7 +116,6 @@ class DialogAnalyzerHandler(BaseHandler):
       auth = self.authorization,
     )
     self.parse_response(response=response)
-    pprint.pprint(response)
 
   def infer(self, instance_id: str, text: str):
     '''
@@ -129,14 +129,17 @@ class DialogAnalyzerHandler(BaseHandler):
       data = json.dumps(data)
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    result = response.json()
+    return result
 
 if __name__ == '__main__':
   instance_id = '0qwknp4jrnu2yt3b'
 
   handler = DialogAnalyzerHandler()
-  handler.get_instance(instance_id=instance_id)
-  handler.get_instance_detail(instance_id=instance_id)
-  handler.deploy_instance(instance_id=instance_id)
-  handler.infer(instance_id=instance_id, text='test')
-  handler.undeploy_instance(instance_id=instance_id)
+  print(handler.get_instances())
+  print(handler.get_instance(instance_id=instance_id))
+  print(handler.deploy_instance(instance_id=instance_id))
+  print(handler.get_instance(instance_id=instance_id))
+  time.sleep(10)
+  print(handler.infer(instance_id=instance_id, text='test'))
+  print(handler.undeploy_instance(instance_id=instance_id))

@@ -1,4 +1,5 @@
 import os
+import sys
 import requests
 import json
 
@@ -13,6 +14,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
+sys.path.append(os.path.dirname(__file__))
 from base_handler import BaseHandler
 
 class DatasetRecordHandler(BaseHandler):
@@ -41,7 +43,6 @@ class DatasetRecordHandler(BaseHandler):
     )
     self.parse_response(response=response)
     records = response.json()
-    self.pprint_logger(object=records)
     return records
 
   def get_record_payloads(self) -> list[dict]:
@@ -63,8 +64,16 @@ class DatasetRecordHandler(BaseHandler):
     )
     self.parse_response(response=response)
     record = response.json()
-    self.pprint_logger(object=record)
     return record
+
+  def get_record_uuid_by_keyvalue(self, key: str, value: str) -> str:
+    '''
+    質問を元にレコードのuuidを取得する
+    '''
+    records = self.get_record_payloads()
+    for record in records:
+      if record.get('body').get(key) == value:
+        return record.get('id')
 
   def create_records(self, bodies: list[dict]) -> list[dict]:
     '''
@@ -79,7 +88,6 @@ class DatasetRecordHandler(BaseHandler):
     )
     self.parse_response(response=response)
     records = response.json()
-    self.pprint_logger(object=records)
     return records
 
   def delete_record(self, record_uuid: str) -> None:

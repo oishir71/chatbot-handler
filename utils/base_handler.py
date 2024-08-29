@@ -29,11 +29,11 @@ class BaseHandler:
 
   def parse_response(self, response):
     if response.status_code in [200, 201, 204]:
-      logger.info('正常終了')
+      logger.debug('正常終了')
     else:
       logger.error('ステータス: %s - %s' % (response.status_code, response.text))
 
   @staticmethod
   def pprint_logger(object):
     for line in pprint.pformat(object, width=150).split('\n'):
-      logger.info(line)
+      logger.log(line)

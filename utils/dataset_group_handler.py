@@ -1,6 +1,6 @@
 import os
+import sys
 import requests
-import pprint
 import json
 from typing import Union
 
@@ -15,7 +15,8 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
-from .base_handler import BaseHandler
+sys.path.append(os.path.dirname(__file__))
+from base_handler import BaseHandler
 
 class DatasetGroupHandler(BaseHandler):
   '''
@@ -42,7 +43,6 @@ class DatasetGroupHandler(BaseHandler):
     )
     self.parse_response(response=response)
     datasetgroups = response.json()
-    self.pprint_logger(object=datasetgroups)
     return datasetgroups
 
   def get_datasetgroup(self, datasetgroup_uuid: str) -> dict:
@@ -55,7 +55,6 @@ class DatasetGroupHandler(BaseHandler):
     )
     self.parse_response(response=response)
     datasetgroup = response.json()
-    self.pprint_logger(object=datasetgroup)
     return datasetgroup
 
   def get_datasetgroup_by_name(self, name: str) -> Union[dict, None]:
@@ -83,7 +82,6 @@ class DatasetGroupHandler(BaseHandler):
     )
     self.parse_response(response=response)
     datagroup = response.json()
-    self.pprint_logger(object=datagroup)
     return datagroup
 
   def delete_datasetgroup(self, datasetgroup_uuid: str) -> None:
@@ -111,14 +109,13 @@ class DatasetGroupHandler(BaseHandler):
     )
     self.parse_response(response=response)
     answers = response.json()
-    self.pprint_logger(object=answers)
     return answers
 
 if __name__ == '__main__':
-  datasetgroup_uuid = '70518ce1-5c19-46a9-8922-7c02c2462273'
+  datasetgroup_uuid = 'fb319003-521e-4b68-b4ef-5443e148ed50'
 
   handler = DatasetGroupHandler()
-  handler.get_datasetgroups()
-  handler.get_datasetgroup(datasetgroup_uuid=datasetgroup_uuid)
-  datagroup = handler.create_datasetgroup(name='aho-no-1')
-  handler.get_answers(datasetgroup_uuid=datasetgroup_uuid)
+  print(handler.get_datasetgroups())
+  print(handler.get_datasetgroup(datasetgroup_uuid=datasetgroup_uuid))
+  # datagroup = handler.create_datasetgroup(name='aho-no-1')
+  # handler.get_answers(datasetgroup_uuid=datasetgroup_uuid)

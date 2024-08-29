@@ -1,5 +1,7 @@
 import os
+import sys
 import requests
+from typing import Union
 
 # Logging
 import logging
@@ -12,7 +14,8 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
-from .base_handler import BaseHandler
+sys.path.append(os.path.dirname(__file__))
+from base_handler import BaseHandler
 
 class DataTypeHandler(BaseHandler):
   '''
@@ -28,7 +31,7 @@ class DataTypeHandler(BaseHandler):
     self.base_url = '%s/api/datarepository/datatypes' % (host_url)
     self.authorization = (id, password)
 
-  def get_datatypes(self):
+  def get_datatypes(self) -> list[dict]:
     '''
     DataTypeの一覧を取得
     '''
@@ -38,10 +41,9 @@ class DataTypeHandler(BaseHandler):
     )
     self.parse_response(response=response)
     datatypes = response.json()
-    self.pprint_logger(object=datatypes)
     return datatypes
 
-  def get_datatype(self, datatype_uuid: str):
+  def get_datatype(self, datatype_uuid: str) -> dict:
     '''
     指定したDataTypeの詳細を取得
     '''
@@ -51,10 +53,9 @@ class DataTypeHandler(BaseHandler):
     )
     self.parse_response(response=response)
     datatype = response.json()
-    self.pprint_logger(object=datatype)
     return datatype
 
-  def get_datatype_by_name(self, name: str):
+  def get_datatype_by_name(self, name: str) -> Union[dict, None]:
     datatypes = self.get_datatypes()
     for datatype in datatypes:
       if datatype.get('name') == name:
@@ -65,6 +66,6 @@ class DataTypeHandler(BaseHandler):
 
 if __name__ == '__main__':
   handler = DataTypeHandler()
-  handler.get_datatypes()
-  handler.get_datatype(datatype_uuid='494c8b2f-44da-4e0d-8b45-088d51892b32') # chatbot-train
-  handler.get_datatype(datatype_uuid='258fe363-3fdc-442a-8642-93ba49e3b08d') # chatbot-answer
+  print(handler.get_datatypes())
+  print(handler.get_datatype(datatype_uuid='494c8b2f-44da-4e0d-8b45-088d51892b32')) # chatbot-train
+  print(handler.get_datatype(datatype_uuid='258fe363-3fdc-442a-8642-93ba49e3b08d')) # chatbot-answer

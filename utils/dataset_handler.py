@@ -1,4 +1,5 @@
 import os
+import sys
 import requests
 import json
 
@@ -13,6 +14,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
+sys.path.append(os.path.dirname(__file__))
 from base_handler import BaseHandler
 
 class Datasethandler(BaseHandler):
@@ -40,7 +42,6 @@ class Datasethandler(BaseHandler):
     )
     self.parse_response(response=response)
     datasets = response.json()
-    self.pprint_logger(object=datasets)
     return datasets
 
   def get_dataset(self, dataset_uuid: str) -> dict:
@@ -53,7 +54,6 @@ class Datasethandler(BaseHandler):
     )
     self.parse_response(response=response)
     dataset = response.json()
-    self.pprint_logger(object=dataset)
     return dataset
 
   def search_dataset(self, name: str, datatype_name: str) -> list[dict]:
@@ -69,7 +69,6 @@ class Datasethandler(BaseHandler):
     )
     self.parse_response(response=response)
     datasets = response.json()
-    self.pprint_logger(object=datasets)
     return datasets
 
   def create_dataset(self, name: str, datatype_uuid: str) -> list[dict]:
@@ -85,7 +84,6 @@ class Datasethandler(BaseHandler):
     )
     self.parse_response(response=response)
     datasets = response.json()
-    self.pprint_logger(object=datasets)
     return datasets
 
   def delete_dataset(self, dataset_uuid: str) -> None:
@@ -117,7 +115,6 @@ class Datasethandler(BaseHandler):
     )
     self.parse_response(response=response)
     content = response.content
-    self.pprint_logger(object=content)
     return content
 
   def export_dataset_by_name(self, name: str) -> list[str]:
@@ -134,7 +131,7 @@ class Datasethandler(BaseHandler):
 if __name__ == '__main__':
   handler = Datasethandler()
   handler.get_datasets()
-  handler.get_dataset(dataset_uuid='7c02c4b9-2147-4282-b7a9-db09ca934465')
+  handler.get_dataset(dataset_uuid='fa7eaab7-7659-4281-972b-d05e54a25d61')
   handler.get_dataset(dataset_uuid='7f4a8e26-3886-4e20-b898-3b2368b3e3c0')
   handler.search_dataset(name='roishi-sample', datatype_name='chatbot-train')
   handler.create_dataset(name="roishi-sample-temp", datatype_uuid='494c8b2f-44da-4e0d-8b45-088d51892b32')

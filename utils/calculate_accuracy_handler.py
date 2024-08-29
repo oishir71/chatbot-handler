@@ -1,4 +1,5 @@
 import os
+import sys
 import requests
 import pprint
 import json
@@ -14,6 +15,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
+sys.path.append(os.path.dirname(__file__))
 from base_handler import BaseHandler
 
 class CalculateAccuracyHandler(BaseHandler):
@@ -43,8 +45,8 @@ class CalculateAccuracyHandler(BaseHandler):
       data=json.dumps(data)
     )
     self.parse_response(response=response)
-    pprint.pprint(response.json())
+    return response.json()
 
 if __name__ == '__main__':
   handler = CalculateAccuracyHandler()
-  handler.get_accuracy(datagroups=['70518ce1-5c19-46a9-8922-7c02c2462273'])
+  print(handler.get_accuracy(datagroups=['fb319003-521e-4b68-b4ef-5443e148ed50']))

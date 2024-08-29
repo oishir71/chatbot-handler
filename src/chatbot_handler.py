@@ -12,7 +12,7 @@ stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
 # Handmade module
-sys.path.append(os.pardir)
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from utils.dialog_analyzer_handler import DialogAnalyzerHandler
 from utils.dataset_group_handler import DatasetGroupHandler
 from utils.dataset_handler import Datasethandler
@@ -88,6 +88,9 @@ class ChatbotHandler:
   def delete_records_from_answer_dataset(self, record_uuids: list[str]):
     for record_uuid in record_uuids:
       self.delete_record_from_answer_dataset(record_uuid=record_uuid)
+
+  def get_answer_record_uuid_by_keyvalue(self, key: str, value: str):
+    return self.answer_dataset_record_handler.get_record_uuid_by_keyvalue(key=key, value=value)
 
   def add_record_into_train_dataset(self, bodies: list[dict]):
     self.train_dataset_record_handler.create_records(bodies=bodies)
