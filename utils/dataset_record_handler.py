@@ -117,10 +117,10 @@ class DatasetRecordHandler(BaseHandler):
 
 if __name__ == "__main__":
     # For training
-    dataset_uuid = "cfd169c9-8712-470c-979e-6d1450e02e16"
+    # dataset_uuid = "cfd169c9-8712-470c-979e-6d1450e02e16"
 
-    handler = DatasetRecordHandler(dataset_uuid=dataset_uuid)
-    handler.get_records()
+    # handler = DatasetRecordHandler(dataset_uuid=dataset_uuid)
+    # handler.get_records()
     # handler.create_records(
     #   bodies=[
     #     {
@@ -140,7 +140,9 @@ if __name__ == "__main__":
     # handler.get_records()
 
     # # For answer
-    dataset_uuid = "924974c0-c6f8-4958-ac0e-1d6a3279b74c"
+    import pprint
+
+    dataset_uuid = "75801414-68de-4c8c-a00f-efd93d323cf2"
     handler = DatasetRecordHandler(dataset_uuid=dataset_uuid)
     # handler.create_records(
     #   bodies=[
@@ -150,4 +152,6 @@ if __name__ == "__main__":
     #     },
     #   ]
     # )
-    handler.get_records()
+    pprint.pprint(
+        handler.get_record(record_uuid="fa724051-7334-4231-ac31-a1315115ea3b")
+    )

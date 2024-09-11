@@ -121,10 +121,11 @@ if __name__ == "__main__":
     datasetgroup_uuid = "fb319003-521e-4b68-b4ef-5443e148ed50"
 
     handler = DatasetGroupHandler()
-    print(handler.get_datasetgroups())
-    print(handler.get_datasetgroup(datasetgroup_uuid=datasetgroup_uuid))
+    # print(handler.get_datasetgroups())
+    # print(handler.get_datasetgroup(datasetgroup_uuid=datasetgroup_uuid))
     # datagroup = handler.create_datasetgroup(name='aho-no-1')
 
     import pprint
 
-    pprint.pprint(handler.get_answers(datasetgroup_uuid=datasetgroup_uuid))
+    # pprint.pprint(handler.get_answers(datasetgroup_uuid=datasetgroup_uuid))
+    pprint.pprint(handler.get_datasetgroup_by_name(name="sample-dataset-group"))
