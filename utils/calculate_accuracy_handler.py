@@ -6,11 +6,14 @@ import json
 
 # Logging
 import logging
+
 logger = logging.getLogger(os.path.basename(__file__))
 logger.setLevel(logging.INFO)
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.INFO)
-handler_format = logging.Formatter('%(asctime)s : [%(name)s - %(lineno)d] %(levelname)-8s - %(message)s')
+handler_format = logging.Formatter(
+    "%(asctime)s : [%(name)s - %(lineno)d] %(levelname)-8s - %(message)s"
+)
 stream_handler.setFormatter(handler_format)
 logger.addHandler(stream_handler)
 
@@ -18,35 +21,43 @@ logger.addHandler(stream_handler)
 sys.path.append(os.path.dirname(__file__))
 from base_handler import BaseHandler
 
+
 class CalculateAccuracyHandler(BaseHandler):
-  '''
-  Dataset group内のログデータからチャットボットインスタンスの正答率を算出する。
-  '''
-  def __init__(
-    self,
-    host_url='http://localhost:8000',
-    id='admin',
-    password='password',
-    project_id='631a6a99-0b30-425a-bdf2-af4532ff9451',
-  ):
-    super().__init__(host_url=host_url, id=id, password=password, project_id=project_id)
-    self.base_url = '%s/api/chatbot/v1.0/projects/%s/calculate-accuracy' % (host_url, project_id)
-    self.authorization = (id, password)
+    """
+    Dataset group内のログデータからチャットボットインスタンスの正答率を算出する。
+    """
 
-  def get_accuracy(self, datagroups: list[str]):
-    '''
-    datgroupsに対し正答率を算出する
-    '''
-    data={'datasetgroups': datagroups}
-    response = requests.post(
-      self.base_url,
-      headers={'Content-Type': 'application/json'},
-      auth=self.authorization,
-      data=json.dumps(data)
-    )
-    self.parse_response(response=response)
-    return response.json()
+    def __init__(
+        self,
+        host_url="http://localhost:8000",
+        id="admin",
+        password="password",
+        project_id="631a6a99-0b30-425a-bdf2-af4532ff9451",
+    ):
+        super().__init__(
+            host_url=host_url, id=id, password=password, project_id=project_id
+        )
+        self.base_url = "%s/api/chatbot/v1.0/projects/%s/calculate-accuracy" % (
+            host_url,
+            project_id,
+        )
+        self.authorization = (id, password)
 
-if __name__ == '__main__':
-  handler = CalculateAccuracyHandler()
-  print(handler.get_accuracy(datagroups=['fb319003-521e-4b68-b4ef-5443e148ed50']))
+    def get_accuracy(self, datagroups: list[str]):
+        """
+        datgroupsに対し正答率を算出する
+        """
+        data = {"datasetgroups": datagroups}
+        response = requests.post(
+            self.base_url,
+            headers={"Content-Type": "application/json"},
+            auth=self.authorization,
+            data=json.dumps(data),
+        )
+        self.parse_response(response=response)
+        return response.json()
+
+
+if __name__ == "__main__":
+    handler = CalculateAccuracyHandler()
+    print(handler.get_accuracy(datagroups=["fb319003-521e-4b68-b4ef-5443e148ed50"]))
