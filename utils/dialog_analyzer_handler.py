@@ -118,7 +118,6 @@ class DialogAnalyzerHandler(BaseHandler):
                 data=json.dumps(data),
             ),
         )
-        self.parse_response(response=response)
         information = response.json()
         return information
 
@@ -131,6 +130,13 @@ class DialogAnalyzerHandler(BaseHandler):
             auth=self.authorization,
         )
         self.parse_response(response=response)
+
+    def delete_instance_by_name(self, name: str) -> None:
+        """
+        nameで指定したインスタンスを削除する
+        """
+        uuid = self.get_instance_uuid_by_name(name=name)
+        self.delete_instance(instance_id=uuid)
 
     def infer(self, instance_id: str, text: str):
         """
@@ -151,12 +157,16 @@ class DialogAnalyzerHandler(BaseHandler):
 if __name__ == "__main__":
     import pprint
 
-    instance_id = "nvqgii7j4brdyatr"  # sample-chatbot-3
+    instance_id = "4pofe5jm8clooowg"  # roishi-prompt-001-gpt4
 
     handler = DialogAnalyzerHandler()
-    pprint.pprint(handler.get_sorted_instances())
-    print(handler.get_instance(instance_id=instance_id))
-    print(handler.get_instance_uuid_by_name(name="roishi-sample"))
+    print(handler.get_instance_uuid_by_name(name="roishi-prompt-001-gpt4"))
+    print(
+        handler.infer(
+            instance_id=instance_id,
+            text="新規アカウントのログインでロール権限が一切ない",
+        )
+    )
     # print(handler.deploy_instance(instance_id=instance_id))
     # print(handler.get_instance(instance_id=instance_id))
     # time.sleep(10)

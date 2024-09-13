@@ -96,6 +96,11 @@ class ChatbotHandler:
             dataset_uuid=self.train_dataset_uuid,
         )
 
+    def remove_answer_data_duplications(self, bodies: list[dict]):
+        return self.answer_dataset_record_handler.remove_duplications_in_bodies(
+            bodies=bodies, key="context"
+        )
+
     def add_record_into_answer_dataset(self, bodies: list[dict]):
         self.answer_dataset_record_handler.create_records(bodies=bodies)
 
@@ -109,6 +114,11 @@ class ChatbotHandler:
     def get_answer_record_uuid_by_keyvalue(self, key: str, value: str):
         return self.answer_dataset_record_handler.get_record_uuid_by_keyvalue(
             key=key, value=value
+        )
+
+    def remove_train_data_duplications(self, bodies: list[dict]):
+        return self.train_dataset_record_handler.remove_duplications_in_bodies(
+            bodies=bodies, key="question"
         )
 
     def add_record_into_train_dataset(self, bodies: list[dict]):
@@ -151,13 +161,7 @@ class ChatbotHandler:
         )
 
     def delete_dialog_analyzer_instance(self, name):
-        if self.dialog_analyzer_uuid.lower() == "setme":
-            self.dialog_analyzer_uuid = (
-                self.dialog_analyzer_handler.get_instance_uuid_by_name(name=name)
-            )
-        self.dialog_analyzer_handler.delete_instance(
-            instance_id=self.dialog_analyzer_uuid
-        )
+        self.dialog_analyzer_handler.delete_instance_by_name(name=name)
 
     # Dump
     def dump_chatbot_information(self, filename: str = "../histories/datagroup.csv"):

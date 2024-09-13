@@ -33,6 +33,9 @@ class BaseHandler:
         self.project_id = project_id
 
     def parse_response(self, response):
+        if isinstance(response, tuple):
+            response = response[0]
+
         if response.status_code in [200, 201, 204]:
             logger.debug("正常終了")
         else:
