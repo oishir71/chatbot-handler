@@ -80,10 +80,23 @@ class DatasetRecordHandler(BaseHandler):
             if record.get("body").get(key) == value:
                 return record.get("id")
 
+    def remove_duplications_in_bodies(self, bodies: list[dict]) -> list[dict]:
+        new_bodies = []
+        questions = []
+        for body in bodies:
+            if not body.get("question") in questions:
+                questions.append(body.get("question"))
+                new_bodies.append(body)
+            else:
+                print(body)
+                logger.warning(f"question: {body.get('question')} is duplicated.")
+        return new_bodies
+
     def create_records(self, bodies: list[dict]) -> list[dict]:
         """
         新規レコードの追加
         """
+        bodies = self.remove_duplications_in_bodies(bodies=bodies)
         data = {"data": [{"body": body} for body in bodies]}
         response = requests.post(
             "%s/records/" % (self.base_url),

@@ -79,6 +79,10 @@ class DialogAnalyzerHandler(BaseHandler):
             logger.error('No such instance was detected: "%s"' % (name))
         return None
 
+    def get_instance_uuid_by_name(self, name: str) -> str:
+        instance = self.get_instance_by_name(name=name)
+        return instance.get("instance_id", None) if not instance is None else None
+
     def deploy_instance(self, instance_id: str) -> dict:
         """
         instance_idで指定したインスタンスを起動する
@@ -151,7 +155,8 @@ if __name__ == "__main__":
 
     handler = DialogAnalyzerHandler()
     pprint.pprint(handler.get_sorted_instances())
-    # print(handler.get_instance(instance_id=instance_id))
+    print(handler.get_instance(instance_id=instance_id))
+    print(handler.get_instance_uuid_by_name(name="roishi-sample"))
     # print(handler.deploy_instance(instance_id=instance_id))
     # print(handler.get_instance(instance_id=instance_id))
     # time.sleep(10)

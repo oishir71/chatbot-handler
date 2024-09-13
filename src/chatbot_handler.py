@@ -150,6 +150,15 @@ class ChatbotHandler:
             instance_id=self.dialog_analyzer_uuid, text=text
         )
 
+    def delete_dialog_analyzer_instance(self, name):
+        if self.dialog_analyzer_uuid.lower() == "setme":
+            self.dialog_analyzer_uuid = (
+                self.dialog_analyzer_handler.get_instance_uuid_by_name(name=name)
+            )
+        self.dialog_analyzer_handler.delete_instance(
+            instance_id=self.dialog_analyzer_uuid
+        )
+
     # Dump
     def dump_chatbot_information(self, filename: str = "../histories/datagroup.csv"):
         with open(filename, mode="a") as f:
