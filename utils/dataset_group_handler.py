@@ -52,6 +52,14 @@ class DatasetGroupHandler(BaseHandler):
         datasetgroups = response.json()
         return datasetgroups
 
+    def get_sorted_datasetgroups(self, key: str = "created_at") -> list[dict]:
+        """
+        プロジェクト配下のデータセットグループを取得する
+        """
+        datasetgroups = self.get_datasetgroups()
+        sorted_datasetgroups = sorted(datasetgroups, key=lambda x: x[key])
+        return sorted_datasetgroups
+
     def get_datasetgroup(self, datasetgroup_uuid: str) -> dict:
         """
         特定のデータセットグループを取得する
@@ -128,4 +136,5 @@ if __name__ == "__main__":
     import pprint
 
     # pprint.pprint(handler.get_answers(datasetgroup_uuid=datasetgroup_uuid))
-    pprint.pprint(handler.get_datasetgroup_by_name(name="sample-dataset-group"))
+    # pprint.pprint(handler.get_datasetgroup_by_name(name="sample-dataset-group"))
+    pprint.pprint(handler.get_sorted_datasetgroups())

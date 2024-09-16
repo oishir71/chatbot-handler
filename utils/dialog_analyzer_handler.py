@@ -54,9 +54,9 @@ class DialogAnalyzerHandler(BaseHandler):
         logger.debug("Number of instances: %d" % (len(instances)))
         return instances
 
-    def get_sorted_instances(self) -> list[dict]:
+    def get_sorted_instances(self, key="created_at") -> list[dict]:
         instances = self.get_instances()
-        sorted_instances = sorted(instances, key=lambda x: x["created_at"])
+        sorted_instances = sorted(instances, key=lambda x: x[key])
         return sorted_instances
 
     def get_instance(self, instance_id: str) -> dict:
@@ -118,7 +118,7 @@ class DialogAnalyzerHandler(BaseHandler):
                 data=json.dumps(data),
             ),
         )
-        information = response.json()
+        information = response[0].json()
         return information
 
     def delete_instance(self, instance_id: str) -> None:
@@ -136,7 +136,8 @@ class DialogAnalyzerHandler(BaseHandler):
         nameで指定したインスタンスを削除する
         """
         uuid = self.get_instance_uuid_by_name(name=name)
-        self.delete_instance(instance_id=uuid)
+        if not uuid is None:
+            self.delete_instance(instance_id=uuid)
 
     def infer(self, instance_id: str, text: str):
         """
@@ -160,13 +161,14 @@ if __name__ == "__main__":
     instance_id = "4pofe5jm8clooowg"  # roishi-prompt-001-gpt4
 
     handler = DialogAnalyzerHandler()
-    print(handler.get_instance_uuid_by_name(name="roishi-prompt-001-gpt4"))
-    print(
-        handler.infer(
-            instance_id=instance_id,
-            text="新規アカウントのログインでロール権限が一切ない",
-        )
-    )
+    # print(handler.get_instance_uuid_by_name(name="roishi-prompt-001-gpt4"))
+    # print(
+    #     handler.infer(
+    #         instance_id=instance_id,
+    #         text="新規アカウントのログインでロール権限が一切ない",
+    #     )
+    # )
+    pprint.pprint(handler.get_sorted_instances())
     # print(handler.deploy_instance(instance_id=instance_id))
     # print(handler.get_instance(instance_id=instance_id))
     # time.sleep(10)
