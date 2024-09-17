@@ -83,6 +83,10 @@ class DialogAnalyzerHandler(BaseHandler):
         instance = self.get_instance_by_name(name=name)
         return instance.get("instance_id", None) if not instance is None else None
 
+    def get_instance_status_by_name(self, name: str) -> str:
+        instance = self.get_instance_by_name(name=name)
+        return instance.get("status")
+
     def deploy_instance(self, instance_id: str) -> dict:
         """
         instance_idで指定したインスタンスを起動する
@@ -93,6 +97,10 @@ class DialogAnalyzerHandler(BaseHandler):
         self.parse_response(response=response)
         information = response.json()
         return information
+
+    def deploy_instance_by_name(self, name: str) -> dict:
+        uuid = self.get_instance_uuid_by_name(name=name)
+        self.deploy_instance(instance_id=uuid)
 
     def undeploy_instance(self, instance_id: str) -> dict:
         """
@@ -158,7 +166,7 @@ class DialogAnalyzerHandler(BaseHandler):
 if __name__ == "__main__":
     import pprint
 
-    instance_id = "4pofe5jm8clooowg"  # roishi-prompt-001-gpt4
+    instance_id = "y68hx5fg98vgyh5o"  # roishi-prompt-001-gpt35-upto20
 
     handler = DialogAnalyzerHandler()
     # print(handler.get_instance_uuid_by_name(name="roishi-prompt-001-gpt4"))

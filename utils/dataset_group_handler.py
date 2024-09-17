@@ -83,6 +83,13 @@ class DatasetGroupHandler(BaseHandler):
             logger.error('No such datagroup was detected: "%s"' % (name))
         return None
 
+    def get_datasetgroup_uuid_by_name(self, name: str) -> Union[str, None]:
+        """
+        特定の名前のデータセットグループのUUIDを取得する
+        """
+        datasetgroup = self.get_datasetgroup_by_name(name=name)
+        return datasetgroup.get("id") if not datasetgroup is None else None
+
     def create_datasetgroup(self, name: str) -> dict:
         """
         nameで指定した名前のデータグループを新規に作成する

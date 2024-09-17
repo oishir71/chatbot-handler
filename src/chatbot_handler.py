@@ -23,11 +23,17 @@ from utils.dataset_record_handler import DatasetRecordHandler
 
 
 class ChatbotHandler:
-    def __init__(self):
-        self.host_url = "http://localhost:8000"
-        self.id = "admin"
-        self.password = "password"
-        self.project_id = "631a6a99-0b30-425a-bdf2-af4532ff9451"
+    def __init__(
+        self,
+        host_url="http://localhost:8000",
+        id="admin",
+        password="password",
+        project_id="631a6a99-0b30-425a-bdf2-af4532ff9451",
+    ):
+        self.host_url = host_url
+        self.id = id
+        self.password = password
+        self.project_id = project_id
 
         self.dialog_analyzer_handler = None
         self.dataset_group_handler = None
